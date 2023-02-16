@@ -1,0 +1,131 @@
+@model InvoiceAPI.Entities.Invoice
+
+@{
+   Layout = null;
+}
+
+<!doctype html>
+<html>
+<head>
+   <meta charset="utf-8">
+   <title>Invoice</title>
+  
+   <style>
+        .invoice-box {
+            width: 800px;
+            margin: auto;
+            padding: 30px;
+            font-size: 12px;
+            line-height: 24px;
+            font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+            color: #242424;
+        }
+
+        .invoice-header {
+            text-align: right;
+        }
+   </style>
+</head>
+
+<body>
+    <div class="invoice-box">
+    <div class="invoice-header">
+        <b><h1>Faktura VAT </b>@Model.InvoiceNumber</h1><br>
+        <b>Wystawiona </b>@Model.InvoiceDate.ToString("d")<br>
+        <b>Termin płatności </b>@Model.InvoiceDue.ToString("d")<br>
+        <b>Metoda płatności </b>@Model.PaymentMethod.ToString()
+    </div>
+    <div>
+        <table class="invoice-box table">
+            <tr>
+                <td>
+                    <b>Sprzedawca</b><br>
+                    @Model.Company.Name<br>
+                    Ul. @Model.Company.Street @Model.Company.Number<br>
+                    @Model.Company.ZipCode @Model.Company.City<br>
+                    NIP: @Model.Company.TIN<br>
+                    Nr konta: @Model.Company.AccountNumber
+                </td>                         
+                <td>
+                    <b>Nabywca</b><br>
+                    @Model.Customer.Name<br>
+                    Ul. @Model.Customer.Street @Model.Customer.Number<br>
+                    @Model.Customer.ZipCode @Model.Customer.City<br>
+                    NIP: @Model.Customer.TIN
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div>
+        <table class="invoice-box table">
+            <tr>
+                <th>Lp.</th>
+                <th>Nazwa</th>
+                <th>Ilość</th>
+                <th>Cena jedn. netto</th>
+                <th>Stawka VAT</th>
+                <th>Wartość netto</th>
+                <th>Wartość VAT</th>
+                <th>Wartość brutto</th>
+            </tr>         
+
+           @for (var i = 1; i <= @Model.Items.Count(); i++)
+           {
+                <tr>
+                    <td>@i</td>
+                    <td>@Model.Items[i-1].Description</td>
+                    <td>@Model.Items[i-1].Amount</td>
+                    <td>@Model.Items[i-1].UnitNetPrice</td>
+                    <td>@Model.Items[i-1].TaxRate</td>
+                    <td>@Model.Items[i-1].NetValue</td>
+                    <td>@Model.Items[i-1].TaxValue</td>
+                    <td>@Model.Items[i-1].GrossValue</td>
+                </tr>
+           }
+
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>W tym</td>
+                <td>@Model.TatalNetValue</td>
+                <td>@Model.TotalTaxValue</td>
+                <td>@Model.TotalGrossValue</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Do zapłaty</td>
+                <td>@Model.TotalGrossValue</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Zapłacono</td>
+                <td>@Model.TotalPaid</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Pozostało do zapłaty</td>
+                <td>@Model.TotalLeftToPay</td>
+            </tr>
+       </table>
+   </div>
+   </div>
+</body>
+</html>
